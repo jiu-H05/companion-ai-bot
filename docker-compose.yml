@@ -1,0 +1,62 @@
+name: deepseek-girl
+
+services:
+  astrbot:
+    image: soulter/astrbot:latest
+    container_name: astrbot
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./astrbot/data:/AstrBot/data
+    ports:
+      # 只绑定服务器回环地址，通过 SSH 隧道访问，不暴露公网
+      - "127.0.0.1:6185:6185"
+    networks:
+      - botnet
+
+  snowluma:
+    image: motricseven7/snowluma:latest
+    container_name: snowluma
+    restart: unless-stopped
+    shm_size: 1gb
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 1048576
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    environment:
+      TZ: Asia/Shanghai
+      VNC_PASSWD: ${VNC_PASSWD}
+      SNOWLUMA_UID: ${SNOWLUMA_UID:-1000}
+      SNOWLUMA_GID: ${SNOWLUMA_GID:-1000}
+      SNOWLUMA_WEBUI_HOST: 0.0.0.0
+      SNOWLUMA_WEBUI_PORT: 5099
+      SNOWLUMA_LOG_LEVEL: info
+      SNOWLUMA_SCREEN: 1280x800x24
+      SNOWLUMA_HOOK_AUTOLOAD: 1
+      SNOWLUMA_QQ_FLAGS: "--disable-gpu --disable-software-rasterizer --disable-gpu-compositing --disable-dev-shm-usage"
+    ports:
+      - "127.0.0.1:6081:6081"   # noVNC 扫码桌面
+      - "127.0.0.1:5099:5099"   # SnowLuma WebUI
+    volumes:
+      - snowluma-data:/app/data
+      - snowluma-config:/app/.config
+      - snowluma-local:/app/.local/share
+    networks:
+      - botnet
+
+volumes:
+  snowluma-data:
+    name: deepseek-girl-snowluma-data
+  snowluma-config:
+    name: deepseek-girl-snowluma-config
+  snowluma-local:
+    name: deepseek-girl-snowluma-local
+
+networks:
+  botnet:
+    name: deepseek-girl-net

@@ -1,0 +1,32 @@
+# 密钥与凭据
+.env
+*.pem
+*.key
+*_ed25519
+id_rsa*
+id_ed25519*
+known_hosts
+
+# 运行时数据与日志
+astrbot/data/
+state.json
+*.log
+*.db
+*.db-shm
+*.db-wal
+
+# 临时/本地文件
+__pycache__/
+*.pyc
+.venv/
+venv/
+tools/
+*.zip
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# 系统
+.DS_Store
+Thumbs.db

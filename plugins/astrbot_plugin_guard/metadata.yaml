@@ -1,0 +1,4 @@
+name: astrbot_plugin_guard
+desc: 群聊 24h 全局额度、私聊白名单、好友申请自动拒绝
+author: dsh
+version: 1.0.0
